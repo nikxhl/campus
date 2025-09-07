@@ -1,0 +1,88 @@
+CampusEventManagement
+├── assignment
+│   ├── docs
+│   │   ├── AI_logs_Link.txt
+│   │   ├── DESIGN_DOCUMENT.TXT
+│   │   ├── ER_DIAGRAM.png
+│   │   └── schema.sql
+│   └── screenshots
+│       ├── ATTENDANCE_SUMMARY.png
+│       ├── EVENT_POPULARITY_REPORT.png
+│       ├── FEEDBACK_SUMMARY.png
+│       ├── MARKING_ATTENDANCE.png
+│       ├── POSTING_FEEDBACK.png
+│       ├── STUDENT_PARTICIPATION_REPORT.png
+│       ├── STUDENT_REGISTER.png
+│       └── TOP_STUDENTS.png
+├── backend
+│   ├── .env
+│   ├── app.js
+│   ├── check_colleges.js
+│   ├── check_users.js
+│   ├── controllers
+│   │   ├── attendanceController.js
+│   │   ├── collegeController.js
+│   │   ├── eventController.js
+│   │   ├── feedbackController.js
+│   │   ├── registrationController.js
+│   │   ├── reportsController.js
+│   │   └── userController.js
+│   ├── db.js
+│   ├── models
+│   │   ├── Attendance.js
+│   │   ├── College.js
+│   │   ├── Event.js
+│   │   ├── Feedback.js
+│   │   ├── Registration.js
+│   │   ├── User.js
+│   │   └── initModels.js
+│   ├── node_modules
+│   ├── package-lock.json
+│   ├── package.json
+│   ├── routes
+│   │   ├── attendanceRoutes.js
+│   │   ├── collegeRoutes.js
+│   │   ├── eventRoutes.js
+│   │   ├── feedbackRoutes.js
+│   │   ├── registrationRoutes.js
+│   │   ├── reportsRoutes.js
+│   │   └── userRoutes.js
+│   ├── schema.sql
+│   └── seed.js
+└── frontend
+    ├── .env
+    ├── .gitignore
+    ├── README.md
+    ├── dist
+    ├── eslint.config.js
+    ├── index.html
+    ├── node_modules
+    ├── package-lock.json
+    ├── package.json
+    ├── postcss.config.cjs
+    ├── public
+    │   └── vite.svg
+    ├── src
+    │   ├── App.css
+    │   ├── App.jsx
+    │   ├── assets
+    │   │   └── react.svg
+    │   ├── components
+    │   │   ├── Header.jsx
+    │   │   └── Layout.jsx
+    │   ├── index.css
+    │   ├── main.jsx
+    │   ├── pages
+    │   │   ├── Attendance.jsx
+    │   │   ├── Colleges.jsx
+    │   │   ├── EventDetails.jsx
+    │   │   ├── EventForm.jsx
+    │   │   ├── Events.jsx
+    │   │   ├── Feedback.jsx
+    │   │   ├── MyRegistrations.jsx
+    │   │   ├── Reports.jsx
+    │   │   └── Users.jsx
+    │   └── services
+    │       └── api.js
+    ├── tailwind.config.js
+    └── vite.config.js

@@ -1,0 +1,132 @@
+Campus Event Management Platform – Design Document
+Introduction
+This design document explains the structure, workflows, and reporting system of the Campus Event Management Platform. The platform allows multiple colleges to manage events and student participation efficiently while providing useful analytics and reports.
+
+1. System Overview
+The Campus Event Management Platform has three main components:
+•	Admin Portal (Web): For college staff to create and manage events such as workshops, hackathons, seminars, and fests.
+•	Student App (Mobile): Students can browse events, register, check-in, and provide feedback.
+•	Reporting System: Provides insights on student engagement, attendance, and event popularity.
+________________________________________
+2. Key Assumptions & Decisions
+Scale
+•	Supports ~50 colleges, each with ~500 students.
+•	Each college can host ~20 events per semester (~1,000 events total).
+Multi-Tenancy
+•	Decision: Single database, segregated by college_id.
+•	Reason: Simplifies maintenance, makes reporting easier, and supports potential cross-college events.
+•	Event IDs are globally unique using UUIDs.
+Business Rules
+•	Students can register only once per event.
+•	Attendance can only be marked on the event day.
+•	Feedback is optional and rated 1–5.
+•	Events have capacity limits.
+•	Registration closes 24 hours before event start.
+Deviation from AI suggestions:
+•	Although AI suggested multiple databases for each college, I opted for a single database to simplify reporting and maintenance.
+________________________________________
+3. Data to Track
+Entities
+•	Colleges: College details
+•	Users: Students and admins
+•	Events: Event info, schedule, venue, capacity
+•	Registrations: Student-event relationships
+•	Attendance: Check-in timestamps
+•	Feedback: Post-event ratings/comments
+Metrics
+•	Registration timestamps and attendance times
+•	Event capacity vs actual attendance
+•	Average feedback ratings
+•	Student engagement levels
+________________________________________
+4. Database Schema
+ER Diagram: See docs/ER_DIAGRAM.png
+Relationships
+•	One college → Many users, Many events
+•	Users ↔ Events: Many-to-many via registrations
+•	Registration → Attendance (1:1)
+•	Registration → Feedback (1:1)
+Tables
+•	colleges: id, name, code, address, created_at, updated_at
+•	users: id, college_id, email, name, role, student_id, created_at, updated_at
+•	events: id, college_id, title, description, type, venue, start/end datetime, capacity, registration_deadline, created_by, created_at, updated_at
+•	registrations: id, event_id, user_id, status, registration_time, created_at
+•	attendance: id, registration_id, check_in_time, check_out_time, created_at
+•	feedback: id, registration_id, rating, comments, submitted_at
+________________________________________
+5. API Design
+Event Management (Admin)
+•	POST /api/events – Create event
+•	PUT /api/events/:id – Update event
+•	DELETE /api/events/:id – Cancel event
+•	GET /api/events – List events
+Registration (Student)
+•	POST /api/events/:id/register – Register for event
+•	DELETE /api/events/:id/register – Cancel registration
+•	GET /api/users/me/registrations – My registrations
+Attendance
+•	POST /api/events/:id/checkin – Mark attendance
+•	GET /api/events/:id/attendance – Admin view
+Feedback
+•	POST /api/events/:id/feedback – Submit feedback
+•	GET /api/events/:id/feedback – Admin view
+Reports
+•	GET /api/reports/event-popularity – Events by registration count
+•	GET /api/reports/student-participation – Student attendance metrics
+•	GET /api/reports/attendance-summary – Attendance percentages
+•	GET /api/reports/feedback-summary – Average feedback ratings
+•	GET /api/reports/top-students – Most active students
+Tip for readability: Bold the endpoints in PDF for clarity.
+________________________________________
+6. Workflows
+Registration Flow
+1.	Student selects an event.
+2.	System checks registration deadline, capacity, and duplicates.
+3.	Registration record created; confirmation sent.
+Attendance Flow
+1.	Student shows QR code at event.
+2.	Admin validates registration and event date.
+3.	Check-in timestamp recorded; attendance count updated.
+Feedback Flow
+1.	Feedback requested after event via app/email.
+2.	Student submits rating (1–5) and optional comments.
+3.	Feedback recorded and aggregated for reports.
+________________________________________
+7. Edge Cases
+Registration
+•	Duplicate: Return error
+•	Over Capacity: Add to waitlist
+•	Late Registration: Deny
+•	Cancelled Event: Notify all registered students
+Attendance
+•	Prevent multiple check-ins
+•	Allow on-spot registration if space permits
+Feedback
+•	Only allow if attended
+•	Update existing rating if resubmitted
+________________________________________
+8. Reports
+•	Event Popularity – Sorted by registrations
+•	Student Participation – Events attended per student
+•	Attendance Summary – % attendance per event
+•	Feedback Summary – Average rating per event
+•	Top Students – 3 most active students
+•	Bonus: Filter reports by event type (Workshop/Fest/Seminar)
+________________________________________
+9. Security & Performance
+•	Parameterized queries to prevent SQL injection
+•	Rate limiting on critical endpoints
+•	HTTPS enforced
+•	Indexed columns: college_id, user_id, event_id
+•	Materialized views for complex reports
+•	Horizontal scaling and caching for large load
+________________________________________
+10. Future Enhancements
+•	Push notifications for upcoming events
+•	Waitlist management
+•	Event reminders and certificates
+•	Paid events & payment integration
+•	Cross-college collaboration
+•	Event recommendation engine
+•	Advanced analytics dashboard
+

@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  # PostgreSQL Database for Development
+  postgres:
+    image: postgres:15-alpine
+    container_name: campus_events_db_dev
+    environment:
+      POSTGRES_DB: campus_event_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: dev_password
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./backend/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql
+      - ./backend/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+    ports:
+      - "5432:5432"
+    networks:
+      - campus_events_dev_network
+
+  # Redis for development
+  redis:
+    image: redis:7-alpine
+    container_name: campus_events_redis_dev
+    ports:
+      - "6379:6379"
+    networks:
+      - campus_events_dev_network
+
+  # pgAdmin for database management
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: campus_events_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@campusevents.dev
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - postgres
+    networks:
+      - campus_events_dev_network
+
+volumes:
+  postgres_dev_data:
+    driver: local
+
+networks:
+  campus_events_dev_network:
+    driver: bridge
